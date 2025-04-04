@@ -22,7 +22,7 @@ import { User, UserModule } from './modules/user';
             password: config.get<string>('databaseConfig.password'),
             database: config.get<string>('databaseConfig.dbname'),
             models: [User],
-            // sync: { force: true },
+            //sync: { force: true },
             synchronize: true,
             logging: console.log,
             autoLoadModels: true,
