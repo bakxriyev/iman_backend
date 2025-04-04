@@ -3,10 +3,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './models';
 import { CreateUserDto } from './dtos';
 import { UpdateUserRequest } from './interfaces';
-import * as ExcelJS from 'exceljs';
-import * as fs from 'fs';
-import * as moment from 'moment';
-import * as path from 'path';
 
 @Injectable()
 export class UserService {
@@ -26,9 +22,6 @@ export class UserService {
       phone_number: payload.phone_number,
       tg_user: payload.tg_user,
     });
-
-    // Excel faylga yozish
-    await this.saveToExcel(new_user);
 
     return {
       message: 'User created successfully',
@@ -53,42 +46,5 @@ export class UserService {
     return {
       message: 'User deleted successfully',
     };
-  }
-
- async saveToExcel(user: User) {
-    const uploadsDir = path.join(process.cwd(), 'uploads');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-    const filePath = path.join(uploadsDir, 'users.xlsx');
-    const workbook = new ExcelJS.Workbook();
-    let worksheet;
-
-    // Agar fayl mavjud bo‘lsa, uni ochamiz
-    if (fs.existsSync(filePath)) {
-      await workbook.xlsx.readFile(filePath);
-      worksheet = workbook.getWorksheet(1);
-    } else {
-      // Yangi fayl yaratish
-      worksheet = workbook.addWorksheet('Users');
-      
-      // Sarlavhalarni qo‘shish
-      worksheet.addRow(['Tartib raqami', 'Ismi', 'Telefon raqami', 'Telegram User', 'Ro‘yxatdan o‘tgan sana']);
-    }
-
-    // Oxirgi satr sonini olish va yangi qator qo‘shish
-    const lastRow = worksheet.rowCount;
-    const formattedDate = moment().format('DD.MM.YYYY HH:mm'); 
-
-    worksheet.addRow([
-      lastRow, 
-      user.full_name, 
-      user.phone_number, 
-      user.tg_user, 
-      formattedDate,
-    ]);
-
-    // Faylni saqlash
-    await workbook.xlsx.writeFile(filePath);
   }
 }
