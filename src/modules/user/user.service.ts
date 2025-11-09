@@ -1,50 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './models';
-import { CreateUserDto } from './dtos';
-import { UpdateUserRequest } from './interfaces';
+import { User } from './models/user.model';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User) private userModel: typeof User) {}
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userModel.findAll();
+    return this.userModel.findAll();
   }
 
   async getSingleUser(id: number): Promise<User> {
-    return await this.userModel.findOne({ where: { id } });
+    const user = await this.userModel.findByPk(id);
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    return user;
   }
 
-  async createUser(payload: CreateUserDto): Promise<{ message: string; new_user: User }> {
-    const new_user = await this.userModel.create({
-      full_name: payload.full_name,
-      phone_number: payload.phone_number,
-      tg_user: payload.tg_user,
-    });
+ async createUser(payload: CreateUserDto): Promise<User> {
+  const newUser = await this.userModel.create({ ...payload });
+  return newUser;
+}
 
-    return {
-      message: 'User created successfully',
-      new_user,
-    };
-  }
 
-  async updateUser(id: number, payload: UpdateUserRequest): Promise<{ message: string; updatedUser: User }> {
-    await this.userModel.update(payload, { where: { id } });
-    const updatedUser = await this.userModel.findOne({ where: { id } });
-
-    return {
-      message: 'User updated successfully',
-      updatedUser,
-    };
+  async updateUser(id: number, payload: UpdateUserDto): Promise<User> {
+    const user = await this.userModel.findByPk(id);
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    await user.update(payload);
+    return user;
   }
 
   async deleteUser(id: number): Promise<{ message: string }> {
-    const foundedUser = await this.userModel.findByPk(id);
-    await foundedUser.destroy();
-
-    return {
-      message: 'User deleted successfully',
-    };
+    const user = await this.userModel.findByPk(id);
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    await user.destroy();
+    return { message: 'User deleted successfully' };
   }
 }

@@ -7,70 +7,49 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { User } from './models';
-import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateUserDto, UpdateUserDto } from './dtos';
-
+import { User } from './models/user.model';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth()
-@Controller('users')
+@Controller('userss')
 export class UserController {
-  #_service: UserService;
-  constructor(service: UserService) {
-    this.#_service = service;
-  }
+  constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Hamma userlarni olish' })
   @Get()
   async getAllUsers(): Promise<User[]> {
-    return await this.#_service.getAllUsers();
+    return this.userService.getAllUsers();
   }
 
-  @ApiOperation({ summary: 'Yagona userlarni olish' })
-  @Get('/:id')
   @ApiOperation({ summary: 'Yagona userni olish' })
+  @Get(':id')
   async getSingleUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    return await this.#_service.getSingleUser(id);
+    return this.userService.getSingleUser(id);
   }
 
-  @ApiOperation({ summary: 'Userni creat qilish' })
+  @ApiOperation({ summary: 'User yaratish' })
   @Post()
-  async createUser(
-    @Body() createUserPayload: CreateUserDto,
-  ): Promise<{ message: string; new_user: CreateUserDto }> {
-    await this.#_service.createUser(createUserPayload);
-    return {
-      message: 'User created successfully',
-      new_user: createUserPayload,
-    };
+  async createUser(@Body() payload: CreateUserDto): Promise<User> {
+    return this.userService.createUser(payload);
   }
 
   @ApiOperation({ summary: 'Userni yangilash' })
-  @Put('/:id')
+  @Put(':id')
   async updateUser(
-    @Param('id') id: string,
-    @Body() updateUserPayload: UpdateUserDto,
-  ): Promise<{ message: string; updatedUser: User }> {
-    const result = await this.#_service.updateUser(
-      +id,
-      updateUserPayload,
-    );
-
-    return {
-      message: 'User updated successfully',
-      updatedUser: result.updatedUser,
-    };
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateUserDto,
+  ): Promise<User> {
+    return this.userService.updateUser(id, payload);
   }
 
   @ApiOperation({ summary: "Userni o'chirish" })
-  @Delete('/:id')
-  async deleteUser(@Param('id') id: string): Promise<{ message: string }> {
-    return this.#_service.deleteUser(+id);
+  @Delete(':id')
+  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
+    return this.userService.deleteUser(id);
   }
 }
