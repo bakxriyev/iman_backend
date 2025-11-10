@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './models/user.model';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { TelegramService } from '../../../common/telegram'; // ✅ qo‘shildi
+import { TelegramService } from '../../common/telegram'; // ✅ qo‘shildi
 
 @Injectable()
 export class UserService {
