@@ -32,8 +32,6 @@ async function bootstrap() {
     methods: ['POST', 'GET', 'PATCH', 'DELETE', 'PUT'],
   });
 
-  app.use(morgan('tiny'));
-
   // uploads papkasini public qilish
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
