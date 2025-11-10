@@ -1,4 +1,4 @@
-import { appConfig, databaseConfig } from './config';
+import { appConfig, databaseConfig } from '../src/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
