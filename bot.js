@@ -1,18 +1,15 @@
-import TelegramBot from 'node-telegram-bot-api';
-import axios from 'axios';
-import ExcelJS from 'exceljs';
-import fs from 'fs';
-import path from 'path';
-import * as dotenv from 'dotenv';
-dotenv.config();
-
-dotenv.config();
+const TelegramBot = require('node-telegram-bot-api');
+const axios = require('axios');
+const ExcelJS = require('exceljs');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 
 const ADMIN_LOGIN = process.env.ADMIN_LOGIN || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '12345';
-const BACKEND_URL = process.env.BACKEND_URL || 'https://backend.khanov.uz/userss';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://backend.khanovbekzod.uz/userss';
 
 const sessions = {}; // login sessiyalari
 
@@ -130,3 +127,5 @@ async function sendExcel(chatId) {
     bot.sendMessage(chatId, '❌ Excel yaratishda xato.');
   }
 }
+
+console.log('✅ Telegram bot ishga tushdi...');
