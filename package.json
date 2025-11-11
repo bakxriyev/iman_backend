@@ -2,8 +2,8 @@
   "name": "Trening",
   "version": "0.0.1",
   "description": "",
-  "type": "commonjs",
   "author": "",
+  "type": "module",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
