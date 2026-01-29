@@ -23,7 +23,7 @@ export class CreateUserDto {
         required: false,
         example: 'Gap',
     })
-    @IsString()
+    @IsOptional()
     type: string;
 
     @ApiProperty({
@@ -31,7 +31,7 @@ export class CreateUserDto {
         required: false,
         example: 'Toshkent'
     })
-    @IsString()
+    @IsOptional()
     address: string;
     
 }
