@@ -3,13 +3,11 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './models/user.model';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { TelegramService } from '../../common/telegram'; // ✅ qo‘shildi
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User) private userModel: typeof User,
-    private readonly telegramService: TelegramService, // ✅ inject qilindi
+    @InjectModel(User) private userModel: typeof User
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -24,11 +22,7 @@ export class UserService {
 
   async createUser(payload: CreateUserDto): Promise<User> {
     const newUser = await this.userModel.create({ ...payload });
-
-    // ✅ Telegramga xabar yuborish
-    await this.telegramService.sendUserCreatedNotification(newUser);
-
-    return newUser;
+   return newUser;
   }
 
   async updateUser(id: number, payload: UpdateUserDto): Promise<User> {
