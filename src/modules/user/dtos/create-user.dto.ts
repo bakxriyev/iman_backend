@@ -15,7 +15,7 @@ export class CreateUserDto {
         required: false,
         example: '+998933211232',
     })
-    @IsPhoneNumber("UZ")
+    @IsOptional()
     phone_number?: string;
 
     @ApiProperty({
