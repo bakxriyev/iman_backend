@@ -25,7 +25,7 @@ export class GetUsersQueryDto {
   })
   @IsOptional()
   @IsString()
-  @IsIn(['a', 'b'])
+  @IsIn(['a', 'b','c','d'])
   address?: string;
 
   @ApiPropertyOptional({ 

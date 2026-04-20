@@ -145,13 +145,7 @@ export class UserService {
   // ✅ 7. Yangi user yaratish
   async createUser(payload: CreateUserDto): Promise<User> {
     // Telefon raqami allaqachon mavjudligini tekshirish
-    const existingUser = await this.userModel.findOne({
-      where: { phone_number: payload.phone_number }
-    });
     
-    if (existingUser) {
-      throw new BadRequestException('User with this phone number already exists');
-    }
     
     const newUser = await this.userModel.create({
       ...payload,
